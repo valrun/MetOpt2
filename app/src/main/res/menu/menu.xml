@@ -5,9 +5,9 @@
         android:icon="@drawable/letter_i"
         android:title="Info" />
     <item
-        android:id="@+id/brents_navigation"
-        android:icon="@drawable/letter_b"
-        android:title="Brents" />
+        android:id="@+id/gradient_navigation"
+        android:icon="@drawable/letter_g"
+        android:title="Gradient" />
     <item
         android:id="@+id/dichotomy_navigation"
         android:icon="@drawable/letter_d"

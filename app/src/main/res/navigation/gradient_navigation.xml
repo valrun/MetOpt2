@@ -2,17 +2,17 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/brents_navigation"
-    app:startDestination="@id/brentsFragment"
+    android:id="@+id/gradient_navigation"
+    app:startDestination="@id/gradientFragment"
     tools:ignore="UnusedNavigation">
     <fragment
-        android:id="@+id/brentsFragment"
-        android:name="com.example.metopt.fragments.BrentsFragment"
-        android:label="BrentsFragment"
-        tools:layout="@layout/fragment_brents">
+        android:id="@+id/gradientFragment"
+        android:name="com.example.metopt.fragments.GradientFragment"
+        android:label="GradientFragment"
+        tools:layout="@layout/fragment_gradient">
         <action
             android:id="@+id/action_home_to_new"
-            app:destination="@id/brentsFragment" />
+            app:destination="@id/gradientFragment" />
         <argument
             android:name="count"
             android:defaultValue="0"

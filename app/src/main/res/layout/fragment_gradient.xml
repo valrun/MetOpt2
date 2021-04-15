@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/brentsText"
+        android:id="@+id/gradientText"
         style="@style/ComplimentTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Brents Method"
+        android:text="Gradient Method"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,14 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="500dip"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/brentsText"
+        app:layout_constraintTop_toBottomOf="@+id/gradientText"
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/prev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="prev"
+        android:text="@string/prev"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
@@ -35,8 +35,33 @@
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="next"
+        android:text="@string/next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hideLevel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prev" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/coordinateLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hideCoordinateLine"
+        app:layout_constraintEnd_toStartOf="@+id/axis"
+        app:layout_constraintStart_toEndOf="@+id/level"
+        app:layout_constraintTop_toTopOf="@+id/level" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/axis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hideAxis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/level" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

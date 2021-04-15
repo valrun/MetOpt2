@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
 import com.example.metopt.methods.ParabolicMethod
-import com.example.metopt.methods.PointsOfMethods
+import com.example.metopt.PointsOfMethods
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries

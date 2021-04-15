@@ -1,6 +1,14 @@
-package com.example.metopt.methods
+package com.example.metopt
 
+import android.graphics.Color
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentActivity
+import com.example.metopt.methods.AbstractMethod
+import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.series.DataPoint
+import com.jjoe64.graphview.series.LineGraphSeries
 import kotlin.math.exp
 import kotlin.math.floor
 import kotlin.math.pow
@@ -78,36 +86,88 @@ class PointsOfMethods {
         return dataPoints
     }
 
-    fun getLineOfLevel(f: MyFunction, ans: Int, l: Int, r: Int): Array<DataPoint> {
+    private fun getLineOfLevel(
+        f: QuadraticFunction,
+        ans: Double,
+        l: Double,
+        r: Double,
+        del: Double = 100.0
+    ): Array<Array<DataPoint>> {
         if (f.a.size != 2) {
-            return emptyArray<DataPoint>()
+            return emptyArray()
         }
 
         val len = r - l
-        val del = 100.0
         val points = Array(floor(len * del).toInt()) { i -> i / del + l }
-        var dataPoints = emptyArray<DataPoint>()
+        var dataPoints1 = emptyArray<DataPoint>()
+        var dataPoints2 = emptyArray<DataPoint>()
         for (x in points) {
-            //a[1][1]x^2 + a1x + a2 = 0
+            //a[1][1]y^2 + a1y + a2 = 0
+
             val a1 = (f.a[0][1] + f.a[1][0]) * x + f.b[1]
             val a2 = f.a[0][0] * x * x + f.b[0] * x + f.c - ans;
             if (f.a[1][1] == 0.0) {
                 val y = a2 / a1
-                dataPoints += DataPoint(x, y)
+                dataPoints1 += DataPoint(x, y)
             } else {
                 val diskr = a1 * a1 - 4 * f.a[1][1] * a2
+                println("a2: $a2\td: $diskr")
                 if (diskr > 0) {
                     val sqrtD = sqrt(diskr)
                     println("x: $x\tsqrt: $sqrtD")
                     val y1 = (-a1 + sqrtD) / (2 * f.a[1][1])
-                    dataPoints += DataPoint(x, y1)
+                    dataPoints1 += DataPoint(x, y1)
                     val y2 = (-a1 - sqrtD) / (2 * f.a[1][1])
-                    dataPoints += DataPoint(x, y2)
+                    dataPoints2 += DataPoint(x, y2)
                 }
             }
         }
-        return dataPoints
+        return arrayOf(dataPoints1, dataPoints2)
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getLevels(
+        n: Int,
+        f: QuadraticFunction,
+        activity: FragmentActivity?,
+        l: Double,
+        r: Double
+    ): Array<LineGraphSeries<DataPoint>> {
+        var levelSeries: Array<LineGraphSeries<DataPoint>> = arrayOf()
+        for (ans in 1..n) {
+            levelSeries += getLevel(ans * 4.0, f, activity, l, r)
+        }
+        return levelSeries;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getLevel(
+        level: Double,
+        f: QuadraticFunction,
+        activity: FragmentActivity?,
+        l: Double,
+        r: Double,
+        del: Double = 100.0
+    ): Array<LineGraphSeries<DataPoint>> {
+        var levelSeries: Array<LineGraphSeries<DataPoint>> = arrayOf()
+        val point = getLineOfLevel(f, level, l, r, del)
+
+        point.forEach {
+            println("Size levels: " + it.size)
+            val series = LineGraphSeries(it)
+            series.color = Color.LTGRAY
+            series.thickness = 2
+            series.setOnDataPointTapListener { series, dataPoint ->
+                Toast.makeText(
+                    activity,
+                    "Level: $level",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            levelSeries += series
+        }
+        return levelSeries;
     }
 
 }

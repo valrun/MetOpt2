@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             bottomNavigationView.selectedItemId = savedInstanceState.getInt(lastId)
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         val navGraphIds = listOf(
             R.navigation.info_navigation,
-            R.navigation.brents_navigation,
+            R.navigation.gradient_navigation,
             R.navigation.dichotomy_navigation,
             R.navigation.fibonacci_navigation,
             R.navigation.golden_navigation
