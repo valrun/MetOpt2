@@ -3,6 +3,10 @@ package com.example.metopt.nmethods;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Квадратичная функция, заданная в матричной форме
+ */
+
 public class QuadraticFunction implements Function<Vector, Double> {
 
     private final int n;
@@ -20,6 +24,9 @@ public class QuadraticFunction implements Function<Vector, Double> {
         this.c = c;
     }
 
+    /**
+     * Применение квадратичной функции к какому-то аргументу
+     */
     public Double apply(Vector arg) {
         double res = 0;
         for (int i = 0; i < n; ++i) {
@@ -35,6 +42,9 @@ public class QuadraticFunction implements Function<Vector, Double> {
         return res;
     }
 
+    /**
+     * Вычисление градиента
+     */
     public Vector getGrad(Vector point) {
         return a.multiply(point).add(b);
     }
