@@ -1,15 +1,22 @@
 package com.example.metopt.nmethods;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
+/**
+ * Абстрактный класс для градиентных методов многомерной оптимизации
+ */
 public abstract class AbstractNMethod {
 
+    /**
+     * Заданная точность
+     */
     final double EPS = 1e-3;
 
     private final QuadraticFunction function;
 
+    /**
+     * Градиент данной квадратичной функции
+     */
     Vector grad;
 
     String name;
@@ -32,19 +39,8 @@ public abstract class AbstractNMethod {
         while (cycleCondition()) {
             x = iterate(x);
         }
-
+        System.err.println(getAns());
         return function.apply(getAns());
-    }
-
-    public List<Value<Vector, Double>> getAllIteration() {
-        List<Value<Vector, Double>> res = new ArrayList<>();
-
-        while (cycleCondition()) {
-            x = iterate(x);
-            res.add(x);
-        }
-
-        return res;
     }
 
     abstract Value<Vector, Double> iterate(Value<Vector, Double> x);
