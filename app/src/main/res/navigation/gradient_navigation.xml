@@ -14,8 +14,16 @@
             android:id="@+id/action_home_to_new"
             app:destination="@id/gradientFragment" />
         <argument
-            android:name="count"
-            android:defaultValue="0"
-            app:argType="string" />
+            android:name="level"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <argument
+            android:name="coordinateLine"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <argument
+            android:name="axis"
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
 </navigation>

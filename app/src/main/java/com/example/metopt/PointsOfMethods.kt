@@ -91,30 +91,35 @@ class PointsOfMethods {
         ans: Double,
         l: Double,
         r: Double,
-        del: Double = 100.0
+        delta: Double = 1000.0
     ): Array<Array<DataPoint>> {
-        if (f.a.size != 2) {
+        val len = r - l
+        if (f.a.size != 2 || len == 0.0) {
             return emptyArray()
         }
-
-        val len = r - l
+        println(len)
+        val del = if (len < 0.2) {
+            delta / len
+        } else {
+            delta
+        }
         val points = Array(floor(len * del).toInt()) { i -> i / del + l }
         var dataPoints1 = emptyArray<DataPoint>()
         var dataPoints2 = emptyArray<DataPoint>()
         for (x in points) {
             //a[1][1]y^2 + a1y + a2 = 0
 
-            val a1 = (f.a[0][1] + f.a[1][0]) * x + f.b[1]
-            val a2 = f.a[0][0] * x * x + f.b[0] * x + f.c - ans;
+            val a1 = (f.a[0][1] + f.a[1][0]) * x + f.b[1] * 2
+            val a2 = f.a[0][0] * x * x + (f.b[0] * x + f.c - ans) * 2
             if (f.a[1][1] == 0.0) {
                 val y = a2 / a1
                 dataPoints1 += DataPoint(x, y)
             } else {
                 val diskr = a1 * a1 - 4 * f.a[1][1] * a2
-                println("a2: $a2\td: $diskr")
+//                println("a2: $a2\td: $diskr")
                 if (diskr > 0) {
                     val sqrtD = sqrt(diskr)
-                    println("x: $x\tsqrt: $sqrtD")
+//                    println("x: $x\tsqrt: $sqrtD")
                     val y1 = (-a1 + sqrtD) / (2 * f.a[1][1])
                     dataPoints1 += DataPoint(x, y1)
                     val y2 = (-a1 - sqrtD) / (2 * f.a[1][1])
@@ -122,7 +127,15 @@ class PointsOfMethods {
                 }
             }
         }
-        return arrayOf(dataPoints1, dataPoints2)
+
+        return  if (dataPoints2.isEmpty()) {
+            arrayOf(dataPoints1)
+        } else {
+            arrayOf(dataPoints1,
+                dataPoints2,
+                arrayOf(dataPoints1.first(), dataPoints2.first()),
+                arrayOf(dataPoints1.last(), dataPoints2.last()),)
+        }
 
     }
 
@@ -148,13 +161,13 @@ class PointsOfMethods {
         activity: FragmentActivity?,
         l: Double,
         r: Double,
-        del: Double = 100.0
+        del: Double = 1000.0
     ): Array<LineGraphSeries<DataPoint>> {
         var levelSeries: Array<LineGraphSeries<DataPoint>> = arrayOf()
         val point = getLineOfLevel(f, level, l, r, del)
 
         point.forEach {
-            println("Size levels: " + it.size)
+//            println("Size levels: " + it.size)
             val series = LineGraphSeries(it)
             series.color = Color.LTGRAY
             series.thickness = 2
