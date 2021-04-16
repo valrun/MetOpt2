@@ -8,16 +8,5 @@
         android:id="@+id/gradient_navigation"
         android:icon="@drawable/letter_g"
         android:title="Gradient" />
-    <item
-        android:id="@+id/dichotomy_navigation"
-        android:icon="@drawable/letter_d"
-        android:title="Dichotomy" />
-    <item
-        android:id="@+id/Fibonacci_navigation"
-        android:icon="@drawable/letter_f"
-        android:title="Fibonacci" />
-    <item
-        android:id="@+id/Golden_navigation"
-        android:icon="@drawable/letter_g"
-        android:title="Golden Ration" />
+
 </menu>

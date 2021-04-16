@@ -108,10 +108,10 @@ class FragmentHelper {
                 i -= 2
             }
 
-            series.setOnDataPointTapListener { series, dataPoint ->
+            series.setOnDataPointTapListener { _, _ ->
                 Toast.makeText(
                     activity,
-                    "Current Answer\n x: ${it.`val`[0]} \n y: ${it.`val`[1]} \n z: ${it.fVal} \n",
+                    "x1: ${it.`val`[0]} \n x2: ${it.`val`[1]} \n ans: ${it.fVal} \n",
                     Toast.LENGTH_SHORT
                 ).show()
             }

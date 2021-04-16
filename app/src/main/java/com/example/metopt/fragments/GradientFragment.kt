@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
+import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.GradientOpt
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
@@ -25,6 +27,8 @@ class GradientFragment : Fragment() {
     private var coordinateLine = true
     private var axis = true
 
+    private var information = ""
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +41,18 @@ class GradientFragment : Fragment() {
         )
 
         val series =
-            FragmentHelper().getFunAndLvlSeries(GradientOpt(f), f, -25.0, 25.0, this.activity)
+            FragmentHelper().getFunAndLvlSeries(GradientMethod(f), f, -25.0, 25.0, this.activity)
 
         functionSeries = series.first
         levelSeries = series.second
+
+        information += "Function: "
+        information += System.lineSeparator()
+        information += f.toString()
+        information += System.lineSeparator()
+        information += "Answer: "
+        information += System.lineSeparator()
+        information += GradientMethod(f).computeMin()
     }
 
 
@@ -100,6 +112,9 @@ class GradientFragment : Fragment() {
         clickCoordinateButton(coorButton)
         axis = !axis
         clickAxisButton(axisButton)
+
+        val info = view.findViewById<TextView>(R.id.information)
+        info.text = information
 
         return view
     }

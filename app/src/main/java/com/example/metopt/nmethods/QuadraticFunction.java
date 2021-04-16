@@ -43,4 +43,20 @@ public class QuadraticFunction implements Function<Vector, Double> {
         return n;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+        int n = a.size();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                res.append(a.get(i, j)).append("*x").append(i + 1).append("x").append(j + 1).append(" + ");
+            }
+        }
+        n = b.size();
+        for (int i = 0; i < n; i++) {
+            res.append(b.get(i)).append("*x").append(i + 1).append(" + ");
+        }
+        res.append(c);
+        return res.toString();
+    }
 }
