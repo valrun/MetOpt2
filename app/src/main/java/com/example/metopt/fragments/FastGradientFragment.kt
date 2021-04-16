@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
+import com.example.metopt.SaveFunction
 import com.example.metopt.nmethods.FastGradientMethod
 import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
@@ -43,11 +44,7 @@ class FastGradientFragment : Fragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
 
-        f = QuadraticFunction(
-            listOf(listOf(20.0, 2.0), listOf(2.0, 3.0)),
-            listOf(-5.0, 3.0),
-            2.0
-        )
+        f = SaveFunction.function
 
         val series =
             FragmentHelper().getFunAndLvlSeries(FastGradientMethod(f), f, -25.0, 25.0, this.activity)
@@ -202,6 +199,7 @@ class FastGradientFragment : Fragment() {
     private fun setEps(eps: Double) {
         graph.removeAllSeries()
 
+        f = SaveFunction.function
         val series =
             FragmentHelper().getFunAndLvlSeries(
                 FastGradientMethod(f, eps),
@@ -220,6 +218,7 @@ class FastGradientFragment : Fragment() {
         init()
         println("Done")
     }
+
 }
 
 

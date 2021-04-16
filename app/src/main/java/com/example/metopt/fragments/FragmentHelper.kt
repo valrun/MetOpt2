@@ -10,6 +10,8 @@ import com.example.metopt.PointsOfMethods
 import com.example.metopt.R
 import com.example.metopt.nmethods.AbstractNMethod
 import com.example.metopt.nmethods.QuadraticFunction
+import com.example.metopt.nmethods.Value
+import com.example.metopt.nmethods.Vector
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlin.math.abs
@@ -57,6 +59,9 @@ class FragmentHelper {
         var r = startR
 
         val points = method.allIteration
+        if (points.isEmpty()) {
+            return Pair(functionSeries, levelSeries)
+        }
         var prevPoint = points.first()
 
         points.forEach {
