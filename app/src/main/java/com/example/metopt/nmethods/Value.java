@@ -2,6 +2,10 @@ package com.example.metopt.nmethods;
 
 import java.util.function.Function;
 
+/**
+ * Пара из вектора и результата применения к нему отображения f: R^n -> R
+ */
+
 public class Value<T, R> {
     private final T val;
     private final R fVal;
@@ -19,3 +23,4 @@ public class Value<T, R> {
         return fVal;
     }
 }
+
