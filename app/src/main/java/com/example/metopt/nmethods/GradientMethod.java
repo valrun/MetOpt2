@@ -1,12 +1,23 @@
 package com.example.metopt.nmethods;
 
+/**
+ * Метод градиентного спуска.
+ *
+ * Основная идея заключается в том, чтобы осуществлять оптимизацию
+ * в направлении наискорейшего спуска, а это направление задаётся
+ * антиградиентом (-grad)
+ */
 public class GradientMethod extends AbstractNMethod {
-    double ALPHA = 1.0;
-    double gradNorm;
 
-    public GradientMethod(QuadraticFunction func) {
-        super(func, "Gradient descent");
-    }
+    /**
+     * Изначальное значение константы, задающей скорость градиентного спуска
+     */
+    double ALPHA = 1.0;
+
+    /**
+     * Норма градиента функции
+     */
+    double gradNorm;
 
     public GradientMethod(QuadraticFunction func, String name) {
         super(func, name);
@@ -15,6 +26,7 @@ public class GradientMethod extends AbstractNMethod {
     @Override
     Value<Vector, Double> iterate(Value<Vector, Double> x) {
         while (true) {
+            // формула градиентого спуска
             Value<Vector, Double> y = new Value<>(
                     x.getVal().add(grad.multiply(-ALPHA / gradNorm)),
                     getFunction());
