@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">MetOpt2</string>
-    <string name="prev">prev</string>
-    <string name="next">next</string>
+    <string name="prev">prev iter</string>
+    <string name="next">next iter</string>
     <string name="hideLevel">hide level</string>
     <string name="showLevel">show level</string>
     <string name="hideCoordinateLine">hide coordinate lines</string>
     <string name="showCoordinateLine">show coordinate lines</string>
     <string name="hideAxis">hide axis</string>
     <string name="showAxis">show axis</string>
+    <string name="eps">0.001</string>
 </resources>

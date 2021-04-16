@@ -13,14 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
-import com.example.metopt.nmethods.GradientMethod
+import com.example.metopt.nmethods.ConjugateGradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_gradient.view.*
 
-class GradientFragment : Fragment() {
+class ConjugateGradientFragment : Fragment() {
     private lateinit var levelSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var functionSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var graph: GraphView
@@ -49,13 +49,17 @@ class GradientFragment : Fragment() {
         )
 
         val series =
-            FragmentHelper().getFunAndLvlSeries(GradientMethod(f), f, -25.0, 25.0, this.activity)
+            FragmentHelper().getFunAndLvlSeries(ConjugateGradientMethod(f), f, -25.0, 25.0, this.activity)
 
         functionSeries = series.first
         levelSeries = series.second
 
+        functionSeries.forEach {
+            println(it.highestValueX - it.lowestValueX)
+        }
+
         information += "Function: " + f.toString() + System.lineSeparator()
-        information += "Answer: " + GradientMethod(f).computeMin()
+        information += "Answer: " + ConjugateGradientMethod(f).computeMin()
     }
 
 
@@ -122,7 +126,7 @@ class GradientFragment : Fragment() {
         }
 
         val nameMethod : TextView = view.findViewById(R.id.nameText)
-        nameMethod.text = "Gradient Method"
+        nameMethod.text = "Conjugate Gradient Method"
 
         info = view.findViewById(R.id.information)
 
@@ -203,7 +207,7 @@ class GradientFragment : Fragment() {
 
         val series =
             FragmentHelper().getFunAndLvlSeries(
-                GradientMethod(f, eps),
+                ConjugateGradientMethod(f, eps),
                 f,
                 -25.0,
                 25.0,
@@ -214,7 +218,7 @@ class GradientFragment : Fragment() {
         levelSeries = series.second
 
         information = "Function: " + f.toString() + System.lineSeparator()
-        information += "Answer: " + GradientMethod(f, eps).computeMin()
+        information += "Answer: " + ConjugateGradientMethod(f, eps).computeMin()
 
         init()
         println("Done")

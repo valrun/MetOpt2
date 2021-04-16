@@ -25,6 +25,18 @@ public class FastGradientMethod extends AbstractNMethod {
         super(fun, name);
     }
 
+    public FastGradientMethod(QuadraticFunction func) {
+        super(func, "Fast gradient descent");
+    }
+
+    public FastGradientMethod(QuadraticFunction func, String name, double eps) {
+        super(func, name, eps);
+    }
+
+    public FastGradientMethod(QuadraticFunction func, double eps) {
+        super(func, "Gradient descent", eps);
+    }
+
     @Override
     Value<Vector, Double> iterate(Value<Vector,Double> x) {
         fun = t -> x.getVal().add(grad.multiply(-t));

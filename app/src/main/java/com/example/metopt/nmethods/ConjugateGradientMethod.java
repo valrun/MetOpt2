@@ -7,7 +7,7 @@ package com.example.metopt.nmethods;
  * Метод сопряженных градиентов является дальнейшим развитием метода наискорейшего
  * спуска, который сочетает в себе два понятия: градиент целевой функции и
  * сопряженное направление векторов.
- *
+ * <p>
  * В соответствии с представленными  выражениями новое сопряженное направление
  * получается сложением градиента (антиградиента) в точке поворота и предыдущего
  * направления движения, умноженного на коэффициент. Таким образом, метод сопряженных
@@ -34,8 +34,25 @@ public class ConjugateGradientMethod extends AbstractNMethod {
         this.REBOOT = reboot;
     }
 
+    public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name, double eps) {
+        super(fun, name, eps);
+        this.REBOOT = reboot;
+    }
+
     public ConjugateGradientMethod(QuadraticFunction fun, String name) {
         this(fun, fun.getN(), name);
+    }
+
+    public ConjugateGradientMethod(QuadraticFunction fun) {
+        this(fun, fun.getN(), "Conjugate gradient descent");
+    }
+
+    public ConjugateGradientMethod(QuadraticFunction fun, String name, double eps) {
+        this(fun, fun.getN(), name, eps);
+    }
+
+    public ConjugateGradientMethod(QuadraticFunction fun, double eps) {
+        this(fun, fun.getN(), "Conjugate gradient descent", eps);
     }
 
     private void checkCnt(Value<Vector, Double> x) {
@@ -48,7 +65,7 @@ public class ConjugateGradientMethod extends AbstractNMethod {
     }
 
     @Override
-    Value<Vector,Double> iterate(Value<Vector,Double> x) {
+    Value<Vector, Double> iterate(Value<Vector, Double> x) {
         checkCnt(x);
         Vector mulRes = getFunction().a.multiply(p);
         double ALPHA = gradientNorm * gradientNorm / mulRes.scalarProduct(p);

@@ -12,6 +12,7 @@ import com.example.metopt.nmethods.AbstractNMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import kotlin.math.abs
 
 class FragmentHelper {
     fun getLevelButtonText(level: Boolean, resources: Resources): String {
@@ -56,7 +57,7 @@ class FragmentHelper {
         var r = startR
 
         val points = method.allIteration
-        var prevPoint = points[0]
+        var prevPoint = points.first()
 
         points.forEach {
 //            println(it.fVal)
@@ -73,6 +74,8 @@ class FragmentHelper {
                     }
                 }
             }
+            l -= abs(l)
+            r += abs(r)
 
             val series = if (prevPoint.`val`[0] < it.`val`[0]) {
                 LineGraphSeries(

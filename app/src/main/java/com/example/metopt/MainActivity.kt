@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         val navGraphIds = listOf(
             R.navigation.info_navigation,
-            R.navigation.gradient_navigation
+            R.navigation.gradient_navigation,
+            R.navigation.fastgradient_navigation,
+            R.navigation.conjugategradient_navigation
         )
         val controller = bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,

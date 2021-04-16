@@ -23,9 +23,9 @@ class PointsOfMethods {
         if (f.a.size != 2 || len == 0.0) {
             return emptyArray()
         }
-//        println(len)
-        val del = if (len < 0.2) {
-            delta / len
+        println("L" + len)
+        val del = if (len < 0.8) {
+            delta / (len * len)
         } else {
             delta
         }

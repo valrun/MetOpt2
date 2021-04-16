@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/gradientText"
+        android:id="@+id/nameText"
         style="@style/ComplimentTextTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,12 +15,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gradientText"
+        app:layout_constraintTop_toBottomOf="@+id/nameText"
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -36,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/prev"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -70,5 +74,22 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/level" />
+
+    <EditText
+        android:id="@+id/epsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/eps"
+        app:layout_constraintStart_toEndOf="@+id/setEps"
+        app:layout_constraintTop_toTopOf="@+id/prev" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/setEps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="set eps:"
+        app:layout_constraintStart_toEndOf="@+id/next"
+        app:layout_constraintTop_toTopOf="@+id/epsText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

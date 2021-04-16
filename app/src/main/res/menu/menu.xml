@@ -8,5 +8,12 @@
         android:id="@+id/gradient_navigation"
         android:icon="@drawable/letter_g"
         android:title="Gradient" />
-
+    <item
+        android:id="@+id/fastgradient_navigation"
+        android:icon="@drawable/letter_f"
+        android:title="Fast Gradient" />
+    <item
+        android:id="@+id/conjugategradient_navigation"
+        android:icon="@drawable/letter_c"
+        android:title="Conjugate Gradient" />
 </menu>
