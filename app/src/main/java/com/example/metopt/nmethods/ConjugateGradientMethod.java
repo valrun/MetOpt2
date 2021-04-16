@@ -1,10 +1,32 @@
 package com.example.metopt.nmethods;
 
+/**
+ * Метод сопряжённых градиентов — итерационный метод для безусловной оптимизации
+ * в многомерном пространстве. Основным достоинством метода является то, что он
+ * решает квадратичную задачу оптимизации за конечное число шагов.
+ * Метод сопряженных градиентов является дальнейшим развитием метода наискорейшего
+ * спуска, который сочетает в себе два понятия: градиент целевой функции и
+ * сопряженное направление векторов.
+ *
+ * В соответствии с представленными  выражениями новое сопряженное направление
+ * получается сложением градиента (антиградиента) в точке поворота и предыдущего
+ * направления движения, умноженного на коэффициент. Таким образом, метод сопряженных
+ * градиентов формирует направление поиска к оптимальному значению используя
+ * информацию о поиске полученную на предыдущих этапах спуска.
+ */
 public class ConjugateGradientMethod extends AbstractNMethod {
 
     private final int REBOOT;
+
+    /**
+     * Текущее количество итераций
+     */
     private int cnt = 0;
+
     private double gradientNorm = Double.POSITIVE_INFINITY;
+    /**
+     * Следующее направление
+     */
     private Vector p;
 
     public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name) {
@@ -32,6 +54,7 @@ public class ConjugateGradientMethod extends AbstractNMethod {
         double ALPHA = gradientNorm * gradientNorm / mulRes.scalarProduct(p);
         Value<Vector, Double> y = new Value<>(x.getVal().add(p.multiply(ALPHA)), getFunction());
         double newGDist = grad.norm();
+        // параметр сопряжённости
         double BETA = newGDist * newGDist / (gradientNorm * gradientNorm);
         p = grad.multiply(-1).add(p.multiply(BETA));
         gradientNorm = newGDist;
