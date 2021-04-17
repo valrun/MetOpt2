@@ -14,13 +14,121 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/informationDouble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Задавать функцию и точность нужно в double. Пример: 1.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameText" />
+
+
+    <TextView
+        android:id="@+id/a"
+        style="@style/CountTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A"
+        app:layout_constraintBottom_toBottomOf="@+id/a12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/a11" />
+
+    <EditText
+        android:id="@+id/a11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="a11"
+        app:layout_constraintStart_toEndOf="@+id/a"
+        app:layout_constraintTop_toBottomOf="@+id/informationDouble" />
+
+    <EditText
+        android:id="@+id/a12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="a12"
+        app:layout_constraintStart_toStartOf="@+id/a11"
+        app:layout_constraintTop_toBottomOf="@+id/a11" />
+
+    <EditText
+        android:id="@+id/a21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="a21"
+        app:layout_constraintStart_toEndOf="@+id/a11"
+        app:layout_constraintTop_toTopOf="@+id/a11" />
+
+    <EditText
+        android:id="@+id/a22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="a22"
+        app:layout_constraintStart_toStartOf="@+id/a21"
+        app:layout_constraintTop_toBottomOf="@+id/a21" />
+
+
+    <TextView
+        android:id="@+id/b"
+        style="@style/CountTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="B"
+        app:layout_constraintBottom_toBottomOf="@+id/a12"
+        app:layout_constraintStart_toEndOf="@+id/a21"
+        app:layout_constraintTop_toTopOf="@+id/a11" />
+
+    <EditText
+        android:id="@+id/b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="b1"
+        app:layout_constraintStart_toEndOf="@+id/b"
+        app:layout_constraintTop_toTopOf="@+id/a21" />
+
+    <EditText
+        android:id="@+id/b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="b2"
+        app:layout_constraintStart_toStartOf="@+id/b1"
+        app:layout_constraintTop_toBottomOf="@+id/b1" />
+
+
+    <TextView
+        android:id="@+id/cText"
+        style="@style/CountTextTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="C"
+        app:layout_constraintBottom_toBottomOf="@+id/a12"
+        app:layout_constraintStart_toEndOf="@+id/b1"
+        app:layout_constraintTop_toTopOf="@+id/a11" />
+
+    <EditText
+        android:id="@+id/c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="c"
+        app:layout_constraintBottom_toBottomOf="@+id/a12"
+        app:layout_constraintStart_toEndOf="@+id/cText"
+        app:layout_constraintTop_toTopOf="@+id/a11" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/setFun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="set fun"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/c" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameText"
+        app:layout_constraintTop_toBottomOf="@+id/a12"
         tools:ignore="MissingConstraints" />
 
     <androidx.appcompat.widget.AppCompatButton

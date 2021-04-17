@@ -1,5 +1,8 @@
 package com.example.metopt.nmethods;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -59,7 +62,7 @@ public class QuadraticFunction implements Function<Vector, Double> {
         int n = a.size();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                res.append(a.get(i, j)).append("*x").append(i + 1).append("x").append(j + 1).append(" + ");
+                res.append(a.get(i, j) / 2).append("*x").append(i + 1).append("x").append(j + 1).append(" + ");
             }
         }
         n = b.size();

@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
-import com.example.metopt.SaveFunction
 import com.example.metopt.nmethods.FastGradientMethod
 import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
@@ -44,16 +43,12 @@ class FastGradientFragment : Fragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
 
-        f = SaveFunction.function
-
-        val series =
-            FragmentHelper().getFunAndLvlSeries(FastGradientMethod(f), f, -25.0, 25.0, this.activity)
-
-        functionSeries = series.first
-        levelSeries = series.second
-
-        information += "Function: " + f.toString() + System.lineSeparator()
-        information += "Answer: " + FastGradientMethod(f).computeMin()
+        f = QuadraticFunction(
+            listOf(listOf(30.0, 0.0), listOf(0.0, 3.0)),
+            listOf(-5.0, 3.0),
+            2.0
+        )
+        setSeries()
     }
 
 
@@ -119,6 +114,32 @@ class FastGradientFragment : Fragment() {
             }
         }
 
+        val a11 = view.findViewById<EditText>(R.id.a11)
+        val a12 = view.findViewById<EditText>(R.id.a12)
+        val a21 = view.findViewById<EditText>(R.id.a21)
+        val a22 = view.findViewById<EditText>(R.id.a22)
+        val b1 = view.findViewById<EditText>(R.id.b1)
+        val b2 = view.findViewById<EditText>(R.id.b2)
+        val c = view.findViewById<EditText>(R.id.c)
+
+        val set = view.findViewById<AppCompatButton>(R.id.setFun)
+        set.setOnClickListener {
+            f = try {
+                QuadraticFunction(
+                    listOf(
+                        listOf(a11.text.toString().toDouble(), a12.text.toString().toDouble()),
+                        listOf(a21.text.toString().toDouble(), a22.text.toString().toDouble())
+                    ),
+                    listOf(b1.text.toString().toDouble(), b2.text.toString().toDouble()),
+                    c.text.toString().toDouble()
+                )
+            } catch (e : Exception) {
+                f
+            }
+            setSeries()
+            init()
+        }
+
         val nameMethod : TextView = view.findViewById(R.id.nameText)
         nameMethod.text = "Fast Gradient Method"
 
@@ -143,6 +164,8 @@ class FastGradientFragment : Fragment() {
     }
 
     private fun init() {
+        graph.removeAllSeries()
+
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
@@ -199,7 +222,6 @@ class FastGradientFragment : Fragment() {
     private fun setEps(eps: Double) {
         graph.removeAllSeries()
 
-        f = SaveFunction.function
         val series =
             FragmentHelper().getFunAndLvlSeries(
                 FastGradientMethod(f, eps),
@@ -216,9 +238,19 @@ class FastGradientFragment : Fragment() {
         information += "Answer: " + FastGradientMethod(f, eps).computeMin()
 
         init()
-        println("Done")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setSeries() {
+        val series =
+            FragmentHelper().getFunAndLvlSeries(GradientMethod(f), f, -25.0, 25.0, this.activity)
+
+        functionSeries = series.first
+        levelSeries = series.second
+
+        information = "Function: " + f.toString() + System.lineSeparator()
+        information += "Answer: " + GradientMethod(f).computeMin()
+    }
 }
 
 

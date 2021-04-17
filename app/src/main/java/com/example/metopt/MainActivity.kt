@@ -1,7 +1,8 @@
 package com.example.metopt
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import com.example.android.navigationadvancedsample.setupWithNavController
