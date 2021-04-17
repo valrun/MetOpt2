@@ -1,7 +1,5 @@
 package com.example.metopt.fragments
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +7,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.example.metopt.R
 import com.example.metopt.nmethods.FastGradientMethod
-import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -38,22 +34,18 @@ class FastGradientFragment : Fragment() {
     private lateinit var axisButton: AppCompatButton
     private lateinit var info: TextView
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
 
         f = QuadraticFunction(
-            listOf(listOf(30.0, 0.0), listOf(0.0, 3.0)),
-            listOf(-5.0, 3.0),
+            listOf(listOf(40.0, 0.0), listOf(0.0, 2.0)),
+            listOf(-7.0, 3.0),
             2.0
         )
         setSeries()
     }
 
-
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -218,7 +210,6 @@ class FastGradientFragment : Fragment() {
         axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setEps(eps: Double) {
         graph.removeAllSeries()
 
@@ -234,22 +225,31 @@ class FastGradientFragment : Fragment() {
         functionSeries = series.first
         levelSeries = series.second
 
-        information = "Function: " + f.toString() + System.lineSeparator()
+        information = "Function: $f"
+        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            System.lineSeparator()
+        } else {
+            ". "
+        }
         information += "Answer: " + FastGradientMethod(f, eps).computeMin()
 
         init()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setSeries() {
         val series =
-            FragmentHelper().getFunAndLvlSeries(GradientMethod(f), f, -25.0, 25.0, this.activity)
+            FragmentHelper().getFunAndLvlSeries(FastGradientMethod(f), f, -25.0, 25.0, this.activity)
 
         functionSeries = series.first
         levelSeries = series.second
 
-        information = "Function: " + f.toString() + System.lineSeparator()
-        information += "Answer: " + GradientMethod(f).computeMin()
+        information = "Function: $f"
+        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+             System.lineSeparator()
+        } else {
+            ". "
+        }
+        information += "Answer: " + FastGradientMethod(f).computeMin()
     }
 }
 

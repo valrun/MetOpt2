@@ -2,16 +2,12 @@ package com.example.metopt.fragments
 
 import android.content.res.Resources
 import android.graphics.Color
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.example.metopt.PointsOfMethods
 import com.example.metopt.R
 import com.example.metopt.nmethods.AbstractNMethod
 import com.example.metopt.nmethods.QuadraticFunction
-import com.example.metopt.nmethods.Value
-import com.example.metopt.nmethods.Vector
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlin.math.abs
@@ -41,8 +37,6 @@ class FragmentHelper {
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getFunAndLvlSeries(
         method: AbstractNMethod,
         f: QuadraticFunction,
@@ -101,18 +95,28 @@ class FragmentHelper {
             series.thickness = 12
 
             if (first) {
-                series.color = Color.rgb(
-                    255f * i / points.size,
-                    255f * i / points.size,
-                    128f + 127f * i / points.size
-                )
+                series.color =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        Color.rgb(
+                            255f * i / points.size,
+                            255f * i / points.size,
+                            128f + 127f * i / points.size
+                        )
+                    } else {
+                        Color.RED
+                    }
                 i += 2
             } else {
-                series.color = Color.rgb(
-                    165f + 60f * i / points.size,
-                    42f + 183f * i / points.size,
-                    42f + 183f * i / points.size
-                )
+                series.color =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        Color.rgb(
+                            165f + 60f * i / points.size,
+                            42f + 183f * i / points.size,
+                            42f + 183f * i / points.size
+                        )
+                    } else {
+                        Color.RED
+                    }
                 i -= 2
             }
 

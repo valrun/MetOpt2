@@ -23,7 +23,7 @@ class PointsOfMethods {
         if (f.a.size != 2 || len == 0.0) {
             return emptyArray()
         }
-        println("L" + len)
+//        println("L" + len)
         val del = if (len < 0.8) {
             delta / (len * len)
         } else {
@@ -67,7 +67,6 @@ class PointsOfMethods {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getLevels(
         n: Int,
         f: QuadraticFunction,
@@ -82,7 +81,6 @@ class PointsOfMethods {
         return levelSeries
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getLevel(
         level: Double,
         f: QuadraticFunction,
