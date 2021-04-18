@@ -201,8 +201,8 @@ class FastGradientFragment : Fragment() {
         axis = !axis
         graph.gridLabelRenderer.isHighlightZeroLines = axis
         if (axis) {
-            graph.gridLabelRenderer.horizontalAxisTitle = "- ось Ox -"
-            graph.gridLabelRenderer.verticalAxisTitle = "- ось Oy -"
+            graph.gridLabelRenderer.horizontalAxisTitle = "- ось Ox1 -"
+            graph.gridLabelRenderer.verticalAxisTitle = "- ось Ox2 -"
         } else {
             graph.gridLabelRenderer.horizontalAxisTitle = ""
             graph.gridLabelRenderer.verticalAxisTitle = ""
