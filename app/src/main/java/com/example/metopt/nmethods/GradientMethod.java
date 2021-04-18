@@ -27,10 +27,6 @@ public class GradientMethod extends AbstractNMethod {
         super(func, "Gradient descent");
     }
 
-    public GradientMethod(QuadraticFunction func, String name, double eps) {
-        super(func, name, eps);
-    }
-
     public GradientMethod(QuadraticFunction func, double eps) {
         super(func, "Gradient descent", eps);
     }

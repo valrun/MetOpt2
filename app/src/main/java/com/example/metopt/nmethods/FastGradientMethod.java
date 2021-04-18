@@ -29,10 +29,6 @@ public class FastGradientMethod extends AbstractNMethod {
         super(func, "Fast gradient descent");
     }
 
-    public FastGradientMethod(QuadraticFunction func, String name, double eps) {
-        super(func, name, eps);
-    }
-
     public FastGradientMethod(QuadraticFunction func, double eps) {
         super(func, "Gradient descent", eps);
     }

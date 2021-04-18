@@ -47,10 +47,6 @@ public class ConjugateGradientMethod extends AbstractNMethod {
         this(fun, fun.getN(), "Conjugate gradient descent");
     }
 
-    public ConjugateGradientMethod(QuadraticFunction fun, String name, double eps) {
-        this(fun, fun.getN(), name, eps);
-    }
-
     public ConjugateGradientMethod(QuadraticFunction fun, double eps) {
         this(fun, fun.getN(), "Conjugate gradient descent", eps);
     }
