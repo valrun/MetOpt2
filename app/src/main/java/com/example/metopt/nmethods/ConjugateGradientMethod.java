@@ -61,14 +61,20 @@ public class ConjugateGradientMethod extends AbstractNMethod {
     }
 
     @Override
-    Value<Vector, Double> iterate(Value<Vector, Double> x) {
+    Value<Vector,Double> iterate(Value<Vector,Double> x) {
         checkCnt(x);
         Vector mulRes = getFunction().a.multiply(p);
         double ALPHA = gradientNorm * gradientNorm / mulRes.scalarProduct(p);
         Value<Vector, Double> y = new Value<>(x.getVal().add(p.multiply(ALPHA)), getFunction());
+        grad = grad.add(mulRes.multiply(ALPHA));
         double newGDist = grad.norm();
         // параметр сопряжённости
-        double BETA = newGDist * newGDist / (gradientNorm * gradientNorm);
+        double BETA;
+        if (cnt == 0) {
+            BETA = 0;
+        } else {
+            BETA = newGDist * newGDist / (gradientNorm * gradientNorm);
+        }
         p = grad.multiply(-1).add(p.multiply(BETA));
         gradientNorm = newGDist;
         return y;
