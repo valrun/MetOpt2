@@ -7,7 +7,7 @@
 
 ### Методы
 * [GradientMethod](app/src/main/java/com/example/metopt/nmethods/GradientMethod.java)
-* [FastGradientMethod](app/src/main/java/com/example/nmetopt/methods/FastGradientMethod.java)
+* [FastGradientMethod](app/src/main/java/com/example/metopt/nmethods/FastGradientMethod.java)
 * [ConjugateGradientMethod](app/src/main/java/com/example/metopt/nmethods/ConjugateGradientMethod.java)
 
 
