@@ -2,12 +2,14 @@ package com.example.metopt.fragments
 
 import android.content.res.Resources
 import android.graphics.Color
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.example.metopt.PointsOfMethods
 import com.example.metopt.R
 import com.example.metopt.nmethods.AbstractNMethod
 import com.example.metopt.nmethods.QuadraticFunction
+import com.jjoe64.graphview.GridLabelRenderer
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.PointsGraphSeries
@@ -36,6 +38,25 @@ class FragmentHelper {
         } else {
             resources.getString(R.string.hideAxis)
         }
+    }
+
+    fun clickCoordinateButton(coordinateLine : Boolean, gridLabelRenderer: GridLabelRenderer, coordinateButton : Button, resources: Resources) {
+        gridLabelRenderer.isHorizontalLabelsVisible = coordinateLine
+        gridLabelRenderer.isVerticalLabelsVisible = coordinateLine
+        coordinateButton.text =
+            FragmentHelper().getCoordinateLineButtonText(coordinateLine, resources)
+    }
+
+    fun clickAxisButton(axis: Boolean, gridLabelRenderer: GridLabelRenderer, axisButton : Button, resources: Resources) {
+        gridLabelRenderer.isHighlightZeroLines = axis
+        if (axis) {
+            gridLabelRenderer.horizontalAxisTitle = "- ось Ox1 -"
+            gridLabelRenderer.verticalAxisTitle = "- ось Ox2 -"
+        } else {
+            gridLabelRenderer.horizontalAxisTitle = ""
+            gridLabelRenderer.verticalAxisTitle = ""
+        }
+        axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
     }
 
     fun getFunAndLvlSeries(

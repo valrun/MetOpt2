@@ -25,5 +25,9 @@
             android:name="axis"
             android:defaultValue="true"
             app:argType="boolean" />
+        <argument
+            android:name="nMethod"
+            android:defaultValue="1"
+            app:argType="integer" />
     </fragment>
 </navigation>

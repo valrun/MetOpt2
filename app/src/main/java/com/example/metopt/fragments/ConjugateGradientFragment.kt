@@ -164,12 +164,20 @@ class ConjugateGradientFragment : Fragment() {
     }
 
     private fun init() {
+        val lastFun = if (level) {
+            graph.series.size - 1
+        } else {
+            graph.series.size - levelSeries.size - 1
+        }
+
         graph.removeAllSeries()
 
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
-        functionSeries.forEach { graph.addSeries(it) }
+        for (i in 0..lastFun) {
+            graph.addSeries(functionSeries[i])
+        }
 
         levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
         coordinateLine = !coordinateLine

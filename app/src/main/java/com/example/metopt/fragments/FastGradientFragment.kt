@@ -1,6 +1,5 @@
 package com.example.metopt.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -89,18 +88,20 @@ class FastGradientFragment : Fragment() {
 
         levelButton = view.findViewById<View>(R.id.level) as AppCompatButton
         levelButton.setOnClickListener {
-            clickLevelButton()
+            init(true)
         }
 
         coordinateButton =
             view.findViewById<View>(R.id.coordinateLine) as AppCompatButton
         coordinateButton.setOnClickListener {
-            clickCoordinateButton()
+            coordinateLine = !coordinateLine
+            FragmentHelper().clickCoordinateButton(coordinateLine, graph.gridLabelRenderer, coordinateButton, resources)
         }
 
         axisButton = view.findViewById<View>(R.id.axis) as AppCompatButton
         axisButton.setOnClickListener {
-            clickAxisButton()
+            axis = !axis
+            FragmentHelper().clickAxisButton(axis, graph.gridLabelRenderer, axisButton, resources)
         }
 
         val setEpsButton: AppCompatButton = view.findViewById<View>(R.id.setEps) as AppCompatButton
@@ -165,32 +166,16 @@ class FastGradientFragment : Fragment() {
         axis = GradientFragmentArgs.fromBundle(requireArguments()).axis
     }
 
-    private fun init() {
-        graph.removeAllSeries()
-
-        if (level) {
-            levelSeries.forEach { graph.addSeries(it) }
-        }
-        graph.addSeries(answerSeries)
-        functionSeries.forEach { graph.addSeries(it) }
-
-        levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
-        coordinateLine = !coordinateLine
-        clickCoordinateButton()
-        axis = !axis
-        clickAxisButton()
-
-        info.text = information
-    }
-
-    private fun clickLevelButton() {
-        level = !level
+    private fun init(changeLvl : Boolean = false) {
         val lastFun = if (level) {
-            graph.series.size - 1
+            graph.series.size - levelSeries.size - 2
         } else {
-            graph.series.size - levelSeries.size - 1
+            graph.series.size - 2
         }
+
         graph.removeAllSeries()
+        if (changeLvl) level = !level
+
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
@@ -198,28 +183,12 @@ class FastGradientFragment : Fragment() {
         for (i in 0..lastFun) {
             graph.addSeries(functionSeries[i])
         }
+
         levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
-    }
+        FragmentHelper().clickCoordinateButton(coordinateLine, graph.gridLabelRenderer, coordinateButton, resources)
+        FragmentHelper().clickAxisButton(axis, graph.gridLabelRenderer, axisButton, resources)
 
-    private fun clickCoordinateButton() {
-        coordinateLine = !coordinateLine
-        graph.gridLabelRenderer.isHorizontalLabelsVisible = coordinateLine
-        graph.gridLabelRenderer.isVerticalLabelsVisible = coordinateLine
-        coordinateButton.text =
-            FragmentHelper().getCoordinateLineButtonText(coordinateLine, resources)
-    }
-
-    private fun clickAxisButton() {
-        axis = !axis
-        graph.gridLabelRenderer.isHighlightZeroLines = axis
-        if (axis) {
-            graph.gridLabelRenderer.horizontalAxisTitle = "- ось Ox1 -"
-            graph.gridLabelRenderer.verticalAxisTitle = "- ось Ox2 -"
-        } else {
-            graph.gridLabelRenderer.horizontalAxisTitle = ""
-            graph.gridLabelRenderer.verticalAxisTitle = ""
-        }
-        axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
+        info.text = information
     }
 
     private fun setSeries(isInit: Boolean, eps: Double? = null) {

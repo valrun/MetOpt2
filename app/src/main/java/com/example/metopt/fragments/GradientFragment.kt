@@ -24,6 +24,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GradientFragment : Fragment() {
+    private var nMethod = 0
+
     private lateinit var levelSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var functionSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var graph: GraphView
@@ -46,6 +48,11 @@ class GradientFragment : Fragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
 
+        level = GradientFragmentArgs.fromBundle(requireArguments()).level
+        coordinateLine = GradientFragmentArgs.fromBundle(requireArguments()).coordinateLine
+        axis = GradientFragmentArgs.fromBundle(requireArguments()).axis
+        nMethod = GradientFragmentArgs.fromBundle(requireArguments()).nMethod
+
         f = QuadraticFunction(
             listOf(listOf(40.0, 0.0), listOf(0.0, 2.0)),
             listOf(-7.0, 3.0),
@@ -54,13 +61,13 @@ class GradientFragment : Fragment() {
         setSeries(false)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_gradient, container, false)
+
 
         //BUTTONS
         val prevButton: AppCompatButton = view.findViewById<View>(R.id.prev) as AppCompatButton
@@ -153,6 +160,7 @@ class GradientFragment : Fragment() {
         graph.viewport.isXAxisBoundsManual = true
 
         init()
+        println("NNN" + nMethod)
         return view
     }
 
@@ -161,6 +169,7 @@ class GradientFragment : Fragment() {
         level = GradientFragmentArgs.fromBundle(requireArguments()).level
         coordinateLine = GradientFragmentArgs.fromBundle(requireArguments()).coordinateLine
         axis = GradientFragmentArgs.fromBundle(requireArguments()).axis
+        nMethod = GradientFragmentArgs.fromBundle(requireArguments()).nMethod
     }
 
     private fun init() {
