@@ -1,6 +1,5 @@
 package com.example.metopt.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +11,11 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import com.example.metopt.R
-import com.example.metopt.nmethods.FastGradientMethod
-import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import com.jjoe64.graphview.series.PointsGraphSeries
 import kotlinx.android.synthetic.main.fragment_gradient.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +26,7 @@ class GradientFragment : Fragment() {
 
     private lateinit var levelSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var functionSeries: Array<LineGraphSeries<DataPoint>>
+    private lateinit var answerSeries: PointsGraphSeries<DataPoint>
     private lateinit var graph: GraphView
 
     private var level = true
@@ -58,6 +57,7 @@ class GradientFragment : Fragment() {
             listOf(-7.0, 3.0),
             2.0
         )
+
         setSeries(false)
     }
 
@@ -68,7 +68,6 @@ class GradientFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_gradient, container, false)
 
-
         //BUTTONS
         val prevButton: AppCompatButton = view.findViewById<View>(R.id.prev) as AppCompatButton
         prevButton.setOnClickListener {
@@ -77,7 +76,7 @@ class GradientFragment : Fragment() {
             } else {
                 graph.series.size
             }
-            if (last > 1) {
+            if (last > 2) {
                 graph.removeSeries(graph.series[graph.series.size - 1])
             }
         }
@@ -88,7 +87,7 @@ class GradientFragment : Fragment() {
                 graph.series.size - levelSeries.size
             } else {
                 graph.series.size
-            }
+            } - 1
             if (last < functionSeries.size) {
                 graph.addSeries(functionSeries[last])
             }
@@ -96,22 +95,30 @@ class GradientFragment : Fragment() {
 
         levelButton = view.findViewById<View>(R.id.level) as AppCompatButton
         levelButton.setOnClickListener {
-            clickLevelButton()
+            init(true)
         }
 
         coordinateButton =
             view.findViewById<View>(R.id.coordinateLine) as AppCompatButton
         coordinateButton.setOnClickListener {
-            clickCoordinateButton()
+            coordinateLine = !coordinateLine
+            FragmentHelper().clickCoordinateButton(
+                coordinateLine,
+                graph.gridLabelRenderer,
+                coordinateButton,
+                resources
+            )
+
         }
 
         axisButton = view.findViewById<View>(R.id.axis) as AppCompatButton
         axisButton.setOnClickListener {
-            clickAxisButton()
+            axis = !axis
+            FragmentHelper().clickAxisButton(axis, graph.gridLabelRenderer, axisButton, resources)
         }
 
         val setEpsButton: AppCompatButton = view.findViewById<View>(R.id.setEps) as AppCompatButton
-        val epsText: EditText = view.findViewById<EditText>(R.id.epsText) as EditText
+        val epsText: EditText = view.findViewById(R.id.epsText) as EditText
         setEpsButton.setOnClickListener {
             println(epsText.text)
             val eps = epsText.text.toString().toDoubleOrNull()
@@ -150,7 +157,7 @@ class GradientFragment : Fragment() {
         info = view.findViewById(R.id.information)
 
         val nameMethod: TextView = view.findViewById(R.id.nameText)
-        nameMethod.text = "Gradient Method"
+        nameMethod.text = FragmentHelper().getNameMethod(nMethod)
 
         //GRAPH
         graph = view.graph as GraphView
@@ -159,8 +166,7 @@ class GradientFragment : Fragment() {
         graph.viewport.isYAxisBoundsManual = true
         graph.viewport.isXAxisBoundsManual = true
 
-        init()
-        println("NNN" + nMethod)
+        init(false)
         return view
     }
 
@@ -172,59 +178,39 @@ class GradientFragment : Fragment() {
         nMethod = GradientFragmentArgs.fromBundle(requireArguments()).nMethod
     }
 
-    private fun init() {
+    private fun init(changeLvl: Boolean = false) {
+        val lastFun =
+            if (changeLvl)
+                (if (level) {
+                    graph.series.size - levelSeries.size
+                } else {
+                    graph.series.size
+                } - 2)
+            else (functionSeries.size - 1)
+
+        println(lastFun)
+
         graph.removeAllSeries()
+        if (changeLvl) level = !level
 
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
-        functionSeries.forEach { graph.addSeries(it) }
-
-        levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
-        coordinateLine = !coordinateLine
-        clickCoordinateButton()
-        axis = !axis
-        clickAxisButton()
-
-        info.text = information
-    }
-
-    private fun clickLevelButton() {
-        level = !level
-        val lastFun = if (level) {
-            graph.series.size - 1
-        } else {
-            graph.series.size - levelSeries.size - 1
-        }
-        graph.removeAllSeries()
-        if (level) {
-            levelSeries.forEach { graph.addSeries(it) }
-        }
+        graph.addSeries(answerSeries)
         for (i in 0..lastFun) {
             graph.addSeries(functionSeries[i])
         }
+
         levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
-    }
+        FragmentHelper().clickCoordinateButton(
+            coordinateLine,
+            graph.gridLabelRenderer,
+            coordinateButton,
+            resources
+        )
+        FragmentHelper().clickAxisButton(axis, graph.gridLabelRenderer, axisButton, resources)
 
-    private fun clickCoordinateButton() {
-        coordinateLine = !coordinateLine
-        graph.gridLabelRenderer.isHorizontalLabelsVisible = coordinateLine
-        graph.gridLabelRenderer.isVerticalLabelsVisible = coordinateLine
-        coordinateButton.text =
-            FragmentHelper().getCoordinateLineButtonText(coordinateLine, resources)
-    }
-
-    private fun clickAxisButton() {
-        axis = !axis
-        graph.gridLabelRenderer.isHighlightZeroLines = axis
-        if (axis) {
-            graph.gridLabelRenderer.horizontalAxisTitle = "- ось Ox1 -"
-            graph.gridLabelRenderer.verticalAxisTitle = "- ось Ox2 -"
-        } else {
-            graph.gridLabelRenderer.horizontalAxisTitle = ""
-            graph.gridLabelRenderer.verticalAxisTitle = ""
-        }
-        axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
+        info.text = information
     }
 
     private fun setSeries(isInit: Boolean, eps: Double? = null) {
@@ -233,11 +219,7 @@ class GradientFragment : Fragment() {
 
         val dispatcher = if (isInit) Dispatchers.IO else Dispatchers.Main
         scope.launch(dispatcher) {
-            val method = if (eps != null) {
-                GradientMethod(f, eps)
-            } else {
-                GradientMethod(f)
-            }
+            val method = FragmentHelper().getMethod(nMethod, f, eps)
 
             val series =
                 FragmentHelper().getFunAndLvlSeries(
@@ -251,15 +233,16 @@ class GradientFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 functionSeries = series.first
                 levelSeries = series.second
+                answerSeries = series.third.first
 
                 information = "Function: $f"
-                information += if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                     System.lineSeparator()
                 } else {
                     ". "
                 }
-                information += "Answer: " + series.third
-                information += if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                information += "Answer: ${series.third.second}"
+                information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                     System.lineSeparator()
                 } else {
                     ". "
@@ -267,7 +250,7 @@ class GradientFragment : Fragment() {
                 information += "Iterations: " + functionSeries.size
 
                 if (isInit) {
-                    init()
+                    init(false)
                     Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show()
                 }
             }

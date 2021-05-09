@@ -7,8 +7,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.example.metopt.PointsOfMethods
 import com.example.metopt.R
-import com.example.metopt.nmethods.AbstractNMethod
-import com.example.metopt.nmethods.QuadraticFunction
+import com.example.metopt.nmethods.*
 import com.jjoe64.graphview.GridLabelRenderer
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -40,14 +39,24 @@ class FragmentHelper {
         }
     }
 
-    fun clickCoordinateButton(coordinateLine : Boolean, gridLabelRenderer: GridLabelRenderer, coordinateButton : Button, resources: Resources) {
+    fun clickCoordinateButton(
+        coordinateLine: Boolean,
+        gridLabelRenderer: GridLabelRenderer,
+        coordinateButton: Button,
+        resources: Resources
+    ) {
         gridLabelRenderer.isHorizontalLabelsVisible = coordinateLine
         gridLabelRenderer.isVerticalLabelsVisible = coordinateLine
         coordinateButton.text =
             FragmentHelper().getCoordinateLineButtonText(coordinateLine, resources)
     }
 
-    fun clickAxisButton(axis: Boolean, gridLabelRenderer: GridLabelRenderer, axisButton : Button, resources: Resources) {
+    fun clickAxisButton(
+        axis: Boolean,
+        gridLabelRenderer: GridLabelRenderer,
+        axisButton: Button,
+        resources: Resources
+    ) {
         gridLabelRenderer.isHighlightZeroLines = axis
         if (axis) {
             gridLabelRenderer.horizontalAxisTitle = "- ось Ox1 -"
@@ -59,13 +68,31 @@ class FragmentHelper {
         axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
     }
 
+    fun getMethod(i: Int, f: QuadraticFunction, eps: Double? = null): AbstractNMethod {
+        return when (i) {
+            1 -> if (eps == null) GradientMethod(f) else GradientMethod(f, eps)
+            2 -> if (eps == null) FastGradientMethod(f) else FastGradientMethod(f, eps)
+            3 -> if (eps == null) ConjugateGradientMethod(f) else ConjugateGradientMethod(f, eps)
+            else -> GradientMethod(f)
+        }
+    }
+
+    fun getNameMethod(i: Int): String {
+        return when (i) {
+            1 -> "Gradient Method"
+            2 -> "Fast Gradient Method"
+            3 ->  "Conjugate Gradient Method"
+            else -> "Method"
+        }
+    }
+
     fun getFunAndLvlSeries(
         method: AbstractNMethod,
         f: QuadraticFunction,
         startL: Double,
         startR: Double,
         activity: FragmentActivity?
-    ): Triple<Array<LineGraphSeries<DataPoint>>, Array<LineGraphSeries<DataPoint>>, PointsGraphSeries<DataPoint>> {
+    ): Triple<Array<LineGraphSeries<DataPoint>>, Array<LineGraphSeries<DataPoint>>, Pair<PointsGraphSeries<DataPoint>, Double>> {
         var levelSeries = emptyArray<LineGraphSeries<DataPoint>>()
         var functionSeries = emptyArray<LineGraphSeries<DataPoint>>()
 
@@ -76,7 +103,7 @@ class FragmentHelper {
 
         val points = method.allIteration
         if (points.isEmpty()) {
-            return Triple(functionSeries, levelSeries, PointsGraphSeries<DataPoint>())
+            return Triple(functionSeries, levelSeries, Pair(PointsGraphSeries<DataPoint>(), 0.0))
         }
         var prevPoint = points.first()
 //        println(points.size)
@@ -161,10 +188,14 @@ class FragmentHelper {
             prevPoint = it
         }
 
-        val answerSeries = PointsGraphSeries(arrayOf(DataPoint(
-            points.last().`val`[0],
-            points.last().`val`[1]
-        )))
+        val answerSeries = PointsGraphSeries(
+            arrayOf(
+                DataPoint(
+                    points.last().`val`[0],
+                    points.last().`val`[1]
+                )
+            )
+        )
         answerSeries.color = Color.RED
         answerSeries.setOnDataPointTapListener { _, _ ->
             Toast.makeText(
@@ -174,7 +205,7 @@ class FragmentHelper {
             ).show()
         }
 
-        return Triple(functionSeries, levelSeries, answerSeries)
+        return Triple(functionSeries, levelSeries, Pair(answerSeries, points.last().fVal))
     }
 }
 

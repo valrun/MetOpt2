@@ -7,7 +7,7 @@
     tools:ignore="UnusedNavigation">
     <fragment
         android:id="@+id/fastgradientFragment"
-        android:name="com.example.metopt.fragments.FastGradientFragment"
+        android:name="com.example.metopt.fragments.GradientFragment"
         android:label="GradientFragment"
         tools:layout="@layout/fragment_gradient">
         <action
@@ -25,5 +25,9 @@
             android:name="axis"
             android:defaultValue="true"
             app:argType="boolean" />
+        <argument
+            android:name="nMethod"
+            android:defaultValue="2"
+            app:argType="integer" />
     </fragment>
 </navigation>
