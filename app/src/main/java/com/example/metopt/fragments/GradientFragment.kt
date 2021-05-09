@@ -1,5 +1,6 @@
 package com.example.metopt.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +10,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
 import com.example.metopt.R
+import com.example.metopt.nmethods.FastGradientMethod
 import com.example.metopt.nmethods.GradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_gradient.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GradientFragment : Fragment() {
     private lateinit var levelSeries: Array<LineGraphSeries<DataPoint>>
@@ -34,6 +40,8 @@ class GradientFragment : Fragment() {
     private lateinit var axisButton: AppCompatButton
     private lateinit var info: TextView
 
+    private val scope = lifecycle.coroutineScope
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -43,7 +51,7 @@ class GradientFragment : Fragment() {
             listOf(-7.0, 3.0),
             2.0
         )
-        setSeries()
+        setSeries(false)
     }
 
 
@@ -103,7 +111,7 @@ class GradientFragment : Fragment() {
             if (eps == null) {
                 Toast.makeText(activity, "Incorrect eps value", Toast.LENGTH_SHORT).show()
             } else {
-                setEps(eps)
+                setSeries(true, eps)
             }
         }
 
@@ -129,8 +137,7 @@ class GradientFragment : Fragment() {
             } catch (e: Exception) {
                 f
             }
-            setSeries()
-            init()
+            setSeries(true)
         }
 
         info = view.findViewById(R.id.information)
@@ -211,44 +218,51 @@ class GradientFragment : Fragment() {
         axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
     }
 
-    private fun setEps(eps: Double) {
-        val series =
-            FragmentHelper().getFunAndLvlSeries(
-                GradientMethod(f, eps),
-                f,
-                -25.0,
-                25.0,
-                this.activity
-            )
+    private fun setSeries(isInit: Boolean, eps: Double? = null) {
+        val activity = this.activity
+        if (isInit) Toast.makeText(activity, "Start counting", Toast.LENGTH_SHORT).show()
 
-        functionSeries = series.first
-        levelSeries = series.second
+        val dispatcher = if (isInit) Dispatchers.IO else Dispatchers.Main
+        scope.launch(dispatcher) {
+            val method = if (eps != null) {
+                GradientMethod(f, eps)
+            } else {
+                GradientMethod(f)
+            }
 
-        information = "Function: $f"
-        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            System.lineSeparator()
-        } else {
-            ". "
+            val series =
+                FragmentHelper().getFunAndLvlSeries(
+                    method,
+                    f,
+                    -25.0,
+                    25.0,
+                    activity
+                )
+
+            withContext(Dispatchers.Main) {
+                functionSeries = series.first
+                levelSeries = series.second
+
+                information = "Function: $f"
+                information += if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    System.lineSeparator()
+                } else {
+                    ". "
+                }
+                information += "Answer: " + series.third
+                information += if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    System.lineSeparator()
+                } else {
+                    ". "
+                }
+                information += "Iterations: " + functionSeries.size
+
+                if (isInit) {
+                    init()
+                    Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
-        information += "Answer: " + GradientMethod(f, eps).computeMin()
-
-        init()
-    }
-
-    private fun setSeries() {
-        val series =
-            FragmentHelper().getFunAndLvlSeries(GradientMethod(f), f, -25.0, 25.0, this.activity)
-
-        functionSeries = series.first
-        levelSeries = series.second
-
-        information = "Function: $f"
-        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            System.lineSeparator()
-        } else {
-            ". "
-        }
-        information += "Answer: " + GradientMethod(f).computeMin()
     }
 }
 

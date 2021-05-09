@@ -1,6 +1,5 @@
 package com.example.metopt
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
@@ -36,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             R.navigation.fastgradient_navigation,
             R.navigation.conjugategradient_navigation
         )
+
         val controller = bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,

@@ -1,5 +1,6 @@
 package com.example.metopt.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +10,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
 import com.example.metopt.R
 import com.example.metopt.nmethods.FastGradientMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import com.jjoe64.graphview.series.PointsGraphSeries
 import kotlinx.android.synthetic.main.fragment_gradient.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FastGradientFragment : Fragment() {
     private lateinit var levelSeries: Array<LineGraphSeries<DataPoint>>
     private lateinit var functionSeries: Array<LineGraphSeries<DataPoint>>
+    private lateinit var answerSeries: PointsGraphSeries<DataPoint>
     private lateinit var graph: GraphView
 
     private var level = true
@@ -34,6 +41,8 @@ class FastGradientFragment : Fragment() {
     private lateinit var axisButton: AppCompatButton
     private lateinit var info: TextView
 
+    private val scope = lifecycle.coroutineScope
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -43,7 +52,7 @@ class FastGradientFragment : Fragment() {
             listOf(-7.0, 3.0),
             2.0
         )
-        setSeries()
+        setSeries(false)
     }
 
     override fun onCreateView(
@@ -61,7 +70,7 @@ class FastGradientFragment : Fragment() {
             } else {
                 graph.series.size
             }
-            if (last > 1) {
+            if (last > 2) {
                 graph.removeSeries(graph.series[graph.series.size - 1])
             }
         }
@@ -73,7 +82,7 @@ class FastGradientFragment : Fragment() {
             } else {
                 graph.series.size
             }
-            if (last < functionSeries.size) {
+            if (last < functionSeries.size - 1) {
                 graph.addSeries(functionSeries[last])
             }
         }
@@ -95,14 +104,14 @@ class FastGradientFragment : Fragment() {
         }
 
         val setEpsButton: AppCompatButton = view.findViewById<View>(R.id.setEps) as AppCompatButton
-        val epsText: EditText = view.findViewById<EditText>(R.id.epsText) as EditText
+        val epsText: EditText = view.findViewById(R.id.epsText) as EditText
         setEpsButton.setOnClickListener {
             println(epsText.text)
             val eps = epsText.text.toString().toDoubleOrNull()
             if (eps == null) {
                 Toast.makeText(activity, "Incorrect eps value", Toast.LENGTH_SHORT).show()
             } else {
-                setEps(eps)
+                setSeries(true, eps)
             }
         }
 
@@ -125,14 +134,15 @@ class FastGradientFragment : Fragment() {
                     listOf(b1.text.toString().toDouble(), b2.text.toString().toDouble()),
                     c.text.toString().toDouble()
                 )
-            } catch (e : Exception) {
+            } catch (e: Exception) {
                 f
             }
-            setSeries()
-            init()
+            val a = 2.0
+            f = QuadraticFunction(listOf(listOf(a, a), listOf(a, a)), listOf(3 * a, 3 * a), a)
+            setSeries(true)
         }
 
-        val nameMethod : TextView = view.findViewById(R.id.nameText)
+        val nameMethod: TextView = view.findViewById(R.id.nameText)
         nameMethod.text = "Fast Gradient Method"
 
         info = view.findViewById(R.id.information)
@@ -161,6 +171,7 @@ class FastGradientFragment : Fragment() {
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
+        graph.addSeries(answerSeries)
         functionSeries.forEach { graph.addSeries(it) }
 
         levelButton.text = FragmentHelper().getLevelButtonText(level, resources)
@@ -183,6 +194,7 @@ class FastGradientFragment : Fragment() {
         if (level) {
             levelSeries.forEach { graph.addSeries(it) }
         }
+        graph.addSeries(answerSeries)
         for (i in 0..lastFun) {
             graph.addSeries(functionSeries[i])
         }
@@ -210,46 +222,52 @@ class FastGradientFragment : Fragment() {
         axisButton.text = FragmentHelper().getAxisButtonText(axis, resources)
     }
 
-    private fun setEps(eps: Double) {
-        graph.removeAllSeries()
+    private fun setSeries(isInit: Boolean, eps: Double? = null) {
+        val activity = this.activity
+        if (isInit) Toast.makeText(activity, "Start counting", Toast.LENGTH_SHORT).show()
 
-        val series =
-            FragmentHelper().getFunAndLvlSeries(
-                FastGradientMethod(f, eps),
-                f,
-                -25.0,
-                25.0,
-                this.activity
-            )
+        val dispatcher = if (isInit) Dispatchers.IO else Dispatchers.Main
+        scope.launch(dispatcher) {
+            val method = if (eps != null) {
+                FastGradientMethod(f, eps)
+            } else {
+                FastGradientMethod(f)
+            }
 
-        functionSeries = series.first
-        levelSeries = series.second
+            val series =
+                FragmentHelper().getFunAndLvlSeries(
+                    method,
+                    f,
+                    -25.0,
+                    25.0,
+                    activity
+                )
 
-        information = "Function: $f"
-        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            System.lineSeparator()
-        } else {
-            ". "
+            withContext(Dispatchers.Main) {
+                functionSeries = series.first
+                levelSeries = series.second
+                answerSeries = series.third
+
+                information = "Function: $f"
+                information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    System.lineSeparator()
+                } else {
+                    ". "
+                }
+                information += "Answer: "
+                information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    System.lineSeparator()
+                } else {
+                    ". "
+                }
+                information += "Iterations: " + functionSeries.size
+
+                if (isInit) {
+                    init()
+                    Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
-        information += "Answer: " + FastGradientMethod(f, eps).computeMin()
-
-        init()
-    }
-
-    private fun setSeries() {
-        val series =
-            FragmentHelper().getFunAndLvlSeries(FastGradientMethod(f), f, -25.0, 25.0, this.activity)
-
-        functionSeries = series.first
-        levelSeries = series.second
-
-        information = "Function: $f"
-        information += if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-             System.lineSeparator()
-        } else {
-            ". "
-        }
-        information += "Answer: " + FastGradientMethod(f).computeMin()
     }
 }
 

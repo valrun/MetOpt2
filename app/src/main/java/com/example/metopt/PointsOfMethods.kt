@@ -1,9 +1,7 @@
 package com.example.metopt
 
 import android.graphics.Color
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.series.DataPoint
@@ -24,11 +22,18 @@ class PointsOfMethods {
             return emptyArray()
         }
 //        println("L" + len)
-        val del = if (len < 0.8) {
+
+        var del = if (len < 0.8) {
             delta / (len * len)
         } else {
             delta
         }
+
+        val a = f.a[0][0]
+        if ((a == f.a[0][1]) && (a == f.a[1][0]) && (a == f.a[1][1])) {
+            del /= 50
+        }
+
         val points = Array(floor(len * del).toInt()) { i -> i / del + l }
         var dataPoints1 = emptyArray<DataPoint>()
         var dataPoints2 = emptyArray<DataPoint>()
@@ -86,11 +91,10 @@ class PointsOfMethods {
         f: QuadraticFunction,
         activity: FragmentActivity?,
         l: Double,
-        r: Double,
-        del: Double = 1000.0
+        r: Double
     ): Array<LineGraphSeries<DataPoint>> {
         var levelSeries: Array<LineGraphSeries<DataPoint>> = arrayOf()
-        val point = getLineOfLevel(f, level, l, r, del)
+        val point = getLineOfLevel(f, level, l, r)
 
         point.forEach {
 //            println("Size levels: " + it.size)

@@ -10,6 +10,7 @@ import com.example.metopt.nmethods.AbstractNMethod
 import com.example.metopt.nmethods.QuadraticFunction
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import com.jjoe64.graphview.series.PointsGraphSeries
 import kotlin.math.abs
 
 class FragmentHelper {
@@ -43,7 +44,7 @@ class FragmentHelper {
         startL: Double,
         startR: Double,
         activity: FragmentActivity?
-    ): Pair<Array<LineGraphSeries<DataPoint>>, Array<LineGraphSeries<DataPoint>>> {
+    ): Triple<Array<LineGraphSeries<DataPoint>>, Array<LineGraphSeries<DataPoint>>, PointsGraphSeries<DataPoint>> {
         var levelSeries = emptyArray<LineGraphSeries<DataPoint>>()
         var functionSeries = emptyArray<LineGraphSeries<DataPoint>>()
 
@@ -54,12 +55,13 @@ class FragmentHelper {
 
         val points = method.allIteration
         if (points.isEmpty()) {
-            return Pair(functionSeries, levelSeries)
+            return Triple(functionSeries, levelSeries, PointsGraphSeries<DataPoint>())
         }
         var prevPoint = points.first()
+//        println(points.size)
 
         points.forEach {
-//            println(it.fVal)
+//            println("VAL:" + it.fVal)
             var firstPoint = true
             val level = PointsOfMethods().getLevel(it.fVal, f, activity, l, r)
             level.forEach { lvl ->
@@ -71,6 +73,7 @@ class FragmentHelper {
                     } else {
                         l = minOf(l, lvl.lowestValueX); r = maxOf(r, lvl.highestValueX)
                     }
+                    l = maxOf(startL, l); r = minOf(r, startR)
                 }
             }
             l -= abs(l)
@@ -137,7 +140,20 @@ class FragmentHelper {
             prevPoint = it
         }
 
-        return Pair(functionSeries, levelSeries)
+        val answerSeries = PointsGraphSeries(arrayOf(DataPoint(
+            points.last().`val`[0],
+            points.last().`val`[1]
+        )))
+        answerSeries.color = Color.RED
+        answerSeries.setOnDataPointTapListener { _, _ ->
+            Toast.makeText(
+                activity,
+                "MINIMUM \n x1: ${points.last().`val`[0]} \n x2: ${points.last().`val`[1]} \n ans: ${points.last().fVal} \n",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        return Triple(functionSeries, levelSeries, answerSeries)
     }
 }
 

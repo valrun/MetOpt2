@@ -24,7 +24,7 @@ public class GradientMethod extends AbstractNMethod {
     }
 
     public GradientMethod(QuadraticFunction func) {
-        super(func, "Gradient descent");
+        this(func, "Gradient descent");
     }
 
     public GradientMethod(QuadraticFunction func, double eps) {
@@ -34,7 +34,6 @@ public class GradientMethod extends AbstractNMethod {
     @Override
     Value<Vector, Double> iterate(Value<Vector, Double> x) {
         while (true) {
-            // формула градиентого спуска
             Value<Vector, Double> y = new Value<>(
                     x.getVal().add(grad.multiply(-ALPHA / gradNorm)),
                     getFunction());

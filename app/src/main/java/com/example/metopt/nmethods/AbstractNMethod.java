@@ -1,6 +1,5 @@
 package com.example.metopt.nmethods;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +26,7 @@ public abstract class AbstractNMethod {
     Value<Vector, Double> x;
 
     protected AbstractNMethod(QuadraticFunction function, String name) {
-        this.function = function;
-        this.name = name;
-        this.EPS = 1e-3;
-        x = new Value<>(
-                new Vector(Collections.nCopies(function.getN(), 0.)),
-                function);
+        this(function, name, 1e-3);
     }
 
     protected AbstractNMethod(QuadraticFunction function, String name, double eps) {
@@ -52,7 +46,6 @@ public abstract class AbstractNMethod {
         while (cycleCondition()) {
             x = iterate(x);
         }
-        System.err.println(getAns());
         return function.apply(getAns());
     }
 
