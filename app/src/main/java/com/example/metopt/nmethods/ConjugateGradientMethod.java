@@ -24,18 +24,19 @@ public class ConjugateGradientMethod extends AbstractNMethod {
     private int cnt = 0;
 
     private double gradientNorm = Double.POSITIVE_INFINITY;
+
     /**
      * Следующее направление
      */
     private Vector p;
 
-    public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name) {
-        super(fun, name);
+    public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name, double eps) {
+        super(fun, name, eps);
         this.REBOOT = reboot;
     }
 
-    public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name, double eps) {
-        super(fun, name, eps);
+    public ConjugateGradientMethod(QuadraticFunction fun, int reboot, String name) {
+        super(fun, name);
         this.REBOOT = reboot;
     }
 
@@ -57,12 +58,11 @@ public class ConjugateGradientMethod extends AbstractNMethod {
             gradientNorm = grad.norm();
             p = grad.multiply(-1);
         }
-        cnt = (cnt + 1) % REBOOT;
     }
 
     @Override
-    Value<Vector,Double> iterate(Value<Vector,Double> x) {
-        checkCnt(x);
+    Value<Vector, Double> iterate(Value<Vector, Double> x) {
+        cnt = (cnt + 1) % REBOOT;
         Vector mulRes = getFunction().a.multiply(p);
         double ALPHA = gradientNorm * gradientNorm / mulRes.scalarProduct(p);
         Value<Vector, Double> y = new Value<>(x.getVal().add(p.multiply(ALPHA)), getFunction());
@@ -82,6 +82,7 @@ public class ConjugateGradientMethod extends AbstractNMethod {
 
     @Override
     boolean cycleCondition() {
+        checkCnt(x);
         if (gradientNorm < EPS) {
             gradientNorm = Double.POSITIVE_INFINITY;
             cnt = 0;

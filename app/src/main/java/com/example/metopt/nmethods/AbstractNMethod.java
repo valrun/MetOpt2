@@ -64,7 +64,7 @@ public abstract class AbstractNMethod {
 
     abstract boolean cycleCondition();
 
-    Vector getAns() {
+    public Vector getAns() {
         return x.getVal();
     }
 }

@@ -120,7 +120,6 @@ class GradientFragment : Fragment() {
         val setEpsButton: AppCompatButton = view.findViewById<View>(R.id.setEps) as AppCompatButton
         val epsText: EditText = view.findViewById(R.id.epsText) as EditText
         setEpsButton.setOnClickListener {
-            println(epsText.text)
             val eps = epsText.text.toString().toDoubleOrNull()
             if (eps == null) {
                 Toast.makeText(activity, "Incorrect eps value", Toast.LENGTH_SHORT).show()
@@ -187,8 +186,6 @@ class GradientFragment : Fragment() {
                     graph.series.size
                 } - 2)
             else (functionSeries.size - 1)
-
-        println(lastFun)
 
         graph.removeAllSeries()
         if (changeLvl) level = !level
